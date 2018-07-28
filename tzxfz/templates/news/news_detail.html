@@ -1,0 +1,71 @@
+{% extends 'base/front_base.html' %}
+{% load news_filters %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/news/news_detail.css' %}">
+    <script src="{% static 'js/template-web.js' %}"></script>
+    <script src="{% static 'js/news_detail.js' %}"></script>
+<script id="comment-item" type="text/html">
+{% verbatim %}
+<li>
+    <div class="top-info-group">
+        <div class="user-info-group">
+            <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2624120087,359004921&fm=27&gp=0.jpg" alt="">
+            <span class="username-group">{{ comment.author.username }}</span>
+        </div>
+        <p class="time-group">{{ comment.pub_time|timeSince }}</p>
+    </div>
+    <p class="comment-content-group">{{ comment.content }}</p>
+</li>
+{% endverbatim %}
+</script>
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+        <div class="main-container">
+            <div class="article-group">
+                    <p class="article-title-group">{{ news.title }}</p>
+                    <div class="article-info-group">
+                        <div class="left-info-group">
+                            <span class="author-time-group">{{ news.author.username }}</span>
+                            <span class="author-time-group">{{ news.pub_time|time_since }}</span>
+                            <span class="category-group">{{ news.category.name }}</span>
+                        </div>
+                    </div>
+                        <article class="article-content-group">
+                            {{ news.content|safe }}
+                        </article>
+                    <div class="comment-group">
+                        <h2 class="comment-title">文章评论(0)</h2>
+                        <textarea id="comment-textarea" placeholder="请填写评论" cols="30" rows="10" class="comment-textarea logined-textarea"></textarea>
+{#                        {% if user.is_authenticated %}#}
+{#                            <textarea id="comment-textarea" placeholder="请填写评论" cols="30" rows="10" class="comment-textarea logined-textarea"></textarea>#}
+{#                        {% else %}#}
+{#                            <textarea readonly placeholder="立即登录，参与评论~" cols="30" rows="10" class="comment-textarea nologin-textarea"></textarea>#}
+{#                        {% endif %}#}
+                        <div class="submit-comment-group">
+                            <button class="submit-comment-btn" id="submit-comment-btn" data-news-id="{{ news.id }}">评论</button>
+                        </div>
+                    </div>
+                    <ul class="comment-list-group">
+                        {% for comment in news.comments.all %}
+                            <li>
+                                <div class="top-info-group">
+                                    <div class="user-info-group">
+                                        <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2624120087,359004921&fm=27&gp=0.jpg" alt="">
+                                        <span class="username-group">{{ comment.author.username }}</span>
+                                    </div>
+                                    <p class="time-group">{{ comment.pub_time|time_since }}</p>
+                                </div>
+                                <p class="comment-content-group">{{ comment.content }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+        </div>
+        <div class="sidebar-container">
+            {% include 'base/side.html' %}
+        </div>
+    </div>
+{% endblock %}
